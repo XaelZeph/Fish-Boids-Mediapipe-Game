@@ -24,6 +24,6 @@ I’m very proud of my unique code modifications for my n-body assignment, so I 
 (8) Enemy behavior should spawn randomly, then linearly move towards a negative version of the spawn location (this is to force it to move towards the center of the screen, where the player is most likely to be). However, I did find that the random spawning had players scrambling; perhaps because the player is assuming the enemy to target the fish’s current location, rather than a random one? Another issue with random destinations is when there’s no food, and the fish spread out, it’s unlikely for the enemy to hit any of them (leading to if the player does nothing, they’ll win). For future testing, see if these end destinations may work better: averaged location of the fish, averaged location of the food, where the player hand currently is (may have issues if both hands are on detected).  
 (9) The difficulty of the game can be increased / decreased by these parameters: time needed to stay alive, speed of enemy, coalescence radius around the food, speed of fish, food drop rate, food degradation rate.
 
-![justification diagram](GITIMAGES/fishdiagram.jpg)
+![justification diagram](GITIMAGES/fishdiagram.JPG)
 (Diagram of design justifications)  
 Other possible future implementations: interactable obstacles the fish must go through/around to escape the predator.
