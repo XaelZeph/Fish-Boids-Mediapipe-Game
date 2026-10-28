@@ -1,39 +1,29 @@
-# IMDM 327 — Computational Virtual Reality
+Assignment \#2  
+Interactive Computation Report  
+Introduction \+ Motivation:   
+During class time, we were shown past submissions for this assignment. I was particularly inspired by one assignment where a fish boids system interacted with mouse inputs. I was also motivated by the Boids system I created during N-body, as I had already coded in repelling forces and a centering force (if they go off screen, they swim back on); so the bodies (fish) both swim towards each other, but refuse to clump up, leading to a better swimming visualization.  
+(No image for the fish game, sorry\!)  
+	I expanded on their project by (1) adding body detection (MediaPipe) for an even more challenging, immersive experience and (2) adding an actual game component. For the game component, I was inspired by the Chicken Boids game inside of the course materials. I liked how simple the gameplay was, yet addictive. (I saw multiple students spend minutes playing the game, getting sucked-in to get that last chicken in.)
 
-Unity course materials for **IMDM 327, Fall 2026**, taught by **Dr. Myungin Lee** at the University of Maryland. These examples are for classroom instruction, experimentation, and student projects.
+(GITIMAGES/chickenboids.png)
+(Chicken Boid Game)  
+However, instead I wanted the entities to follow *my* movement, rather than run away. This interaction reminded me of certain Real-Time Strategy (RTS) games (such as Warcraft or Starcraft), where you build armies and bring them into battle by clicking for their next position. Certain games let you build massive armies, and I always found the boid system’s movement from the frantic clicking forward, then backwards, then forwards again to maneuver against enemy armies oddly satisfying. When I was bored, I would often click in a circle, just to see how they ran around to chase my next position. I wanted to create something similar, where you’re tasked to keep a group of fish safe; to maneuver them into safe positions away from enemies.
 
-[Course website](https://sites.google.com/umd.edu/imdm-327-lee-2026f/home)
+(GITIMAGES/Warcraft-III-5-Iconic-Human-Army-Compositions-to-Use-GP5.jpg)
+(Warcraft Gameplay, from [Warcraft III: 5 Iconic Human Army Compositions to Use](https://www.keengamer.com/articles/features/others/warcraft-iii-5-iconic-human-army-compositions-to-use/))
 
-## Course material
+Methods:  
+I’m very proud of my unique code modifications for my n-body assignment, so I reused it with these specific major changes:   
+(1) Mediapipe will now spawn 2 hands; when the hands are closed, they do not interact with the fish, when the hands are open they “drop food,” aka spawn in a spherical mass which slowly degrades over time. There should be 2 assets to reflect this open and closed hands. Since the number of food increases and decreases (possibly 0 at times), for efficiency, use List which allows for mutable sizing. For simplicity, “closed” is the pinch bool calculated in base Mediapipe given in course materials.  
+(2) Food should be generated at a set rate, otherwise generating every frame the hand is open can cause an overload of food (leading to unintended behavior and frame drops from increased calculations). Food should also have a set degradation rate. Min size was also set, so that negligible food (i.e. m \< 10), doesn’t clog up space (and increase calculation time).   
+(3) The fish’s acceleration towards the food should linearly increase depending on the distance to the food. For example, the farther the fish, the faster it should run towards the food.  
+(4) Once the fish gets close enough to the food (radius around food), slow down. Otherwise, it will accelerate PAST the food, usually causing continuous acceleration (as they run past the food, they are once again far away, so they accelerate even faster).  
+(5) To account for *possible* continuous acceleration, set max velocity. Since the fish is also decelerating near the food, it may also slow to a stop; this is not behavior we want, so also set min velocity.  
+(6) Collisions with the predator should delete (‘eat’) the fish. Due to the amount of fish being spawned, instead of creating colliders, just calculate distance between fish and predator. Since the fish population is also changing, change the fish array into a List to decrease time complexity.  
+(7) The fish must look in the rotation that they are swimming in. I found that setting rotation speed to twelve (12) allowed my computational fish to mimic the jerky/flicking movements of real smaller fish (like minnows). I found this very charming (utilizing a computational limit).  
+(8) Enemy behavior should spawn randomly, then linearly move towards a negative version of the spawn location (this is to force it to move towards the center of the screen, where the player is most likely to be). However, I did find that the random spawning had players scrambling; perhaps because the player is assuming the enemy to target the fish’s current location, rather than a random one? Another issue with random destinations is when there’s no food, and the fish spread out, it’s unlikely for the enemy to hit any of them (leading to if the player does nothing, they’ll win). For future testing, see if these end destinations may work better: averaged location of the fish, averaged location of the food, where the player hand currently is (may have issues if both hands are on detected).  
+(9) The difficulty of the game can be increased / decreased by these parameters: time needed to stay alive, speed of enemy, coalescence radius around the food, speed of fish, food drop rate, food degradation rate.
 
-The course introduces computation, trails, flocking, data, XR interaction, sound, and images. The code examples in [Assets/327_CourseMaterial](Assets/327_CourseMaterial) build up in a few steps:
-
-| Step | Examples | Focus |
-| --- | --- | --- |
-| 1. Motion | `ThreeBody.cs` | Forces, acceleration, velocity, and trails |
-| 2. Data | `DataCSV.cs`, `DataJSON.cs`, `SolarSystemStarter.cs` | Load data and use it in a simulation |
-| 3. Sound | `SoundFM.cs`, `SoundFMPiano.cs`, `AudioSpectrum.cs` | FM synthesis, notes, and audio visualization |
-| 4. Flocking + sound | `PianoBoids.cs`, `FlockingSynth.cs`, `BoidFMSynth.cs` | Connect boid motion and sound parameters |
-| 5. Gesture interaction | `MediaPipeBodyTracker.cs`, `InteractiveBody.cs` | Webcam landmarks and hand-controlled gravity |
-| 6. Game | `ChickenBoids.cs`, `ChickenPlayer.cs` | Herd animated chickens using flocking and player repulsion |
-| 7. Shaders | `Color.shader`, `CircleControl.cs`, `Metaballs2D.shader` | Color, UV, gradients, circles, time, then metaballs |
-
-Open the project in Unity and start with `Assets/327_CourseMaterial/Scenes/00_World.unity`. Scripts are in `Assets/327_CourseMaterial/Scripts`.
-
-Gesture scenes are in `Assets/327_CourseMaterial/Scenes/Gesture`: `Gesture-basic` shows landmarks; `Gesture-flocking` adds boids. Select `MediaPipe` to toggle Debug Mode or use Show/Hide landmarks. Pinch and shake either hand to attract the boids. Stronger shaking creates stronger gravity, which fades when you stop moving. These samples use a desktop webcam and the bundled Windows MediaPipe runtime.
-
-Open `Assets/327_CourseMaterial/Scenes/Game/Chicken-herding.unity` to play as a farmer and herd 100 chickens while a cat gets in the way. Move with WASD or arrows, hold Shift to run, speak loudly or press Space to shout, and press R to restart. Animal calls and shouts use real-time FM synthesis. Game code is in `Game/ChickenHerd`; clouds use a Unity adaptation of [TileableVolumeNoise](https://github.com/sebh/TileableVolumeNoise).
-
-Start the shader lesson in [ShaderBasics](Assets/327_CourseMaterial/07_ShaderBasics/README.md): Color → UV → Gradient → Circle → Time. Each scene compares HLSL with Shader Graph. Press Play and select Controls to change both through a small C# script.
-
-Continue in `Assets/327_CourseMaterial/07_Metaballs`: `01_Metaballs_2D`, `02_Metaballs_3D`, and `03_Metaballs_MR`. The 2D scene combines the object comparison and shader stages. Toggle Shader Graph in each scene's Inspector to compare implementations. See the [short lesson guide](Docs/WEEK06_DEMO_README.md).
-
-![Sound](https://github.com/user-attachments/assets/348a0502-0e68-42f1-b30e-58dc77cb91aa)
-
-## Video
-
-[![Watch the video on YouTube](https://img.youtube.com/vi/5UXLY4lZ8zo/hqdefault.jpg)](https://www.youtube.com/watch?v=5UXLY4lZ8zo)
-
-## License
-
-Course material code is released under the [MIT License](LICENSE). Third-party packages and assets retain their own licenses.
+(GITIMAGES/fishdiagram.jpg)
+(Diagram of design justifications)  
+Other possible future implementations: interactable obstacles the fish must go through/around to escape the predator.
