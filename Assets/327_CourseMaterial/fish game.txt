@@ -1,0 +1,11 @@
+fish game
+
+- my boids
+- using mediapipe + pinch
+- pinch = sprinkle fish food
+- glove/hand 2D, pinch = pinch asset
+- predator + levels (first level is just boids)
+
+
+needs to ask:
+- check that when fish is spawned, the animator automatically makes it swim
