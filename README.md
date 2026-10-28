@@ -5,11 +5,11 @@ During class time, we were shown past submissions for this assignment. I was par
 (No image for the fish game, sorry\!)  
 	I expanded on their project by (1) adding body detection (MediaPipe) for an even more challenging, immersive experience and (2) adding an actual game component. For the game component, I was inspired by the Chicken Boids game inside of the course materials. I liked how simple the gameplay was, yet addictive. (I saw multiple students spend minutes playing the game, getting sucked-in to get that last chicken in.)
 
-(GITIMAGES/chickenboids.png)
+![chicken boids](GITIMAGES/chickenboids.png)
 (Chicken Boid Game)  
 However, instead I wanted the entities to follow *my* movement, rather than run away. This interaction reminded me of certain Real-Time Strategy (RTS) games (such as Warcraft or Starcraft), where you build armies and bring them into battle by clicking for their next position. Certain games let you build massive armies, and I always found the boid system’s movement from the frantic clicking forward, then backwards, then forwards again to maneuver against enemy armies oddly satisfying. When I was bored, I would often click in a circle, just to see how they ran around to chase my next position. I wanted to create something similar, where you’re tasked to keep a group of fish safe; to maneuver them into safe positions away from enemies.
 
-(GITIMAGES/Warcraft-III-5-Iconic-Human-Army-Compositions-to-Use-GP5.jpg)
+![warcraft gameplay](GITIMAGES/Warcraft-III-5-Iconic-Human-Army-Compositions-to-Use-GP5.jpg)
 (Warcraft Gameplay, from [Warcraft III: 5 Iconic Human Army Compositions to Use](https://www.keengamer.com/articles/features/others/warcraft-iii-5-iconic-human-army-compositions-to-use/))
 
 Methods:  
@@ -24,6 +24,6 @@ I’m very proud of my unique code modifications for my n-body assignment, so I 
 (8) Enemy behavior should spawn randomly, then linearly move towards a negative version of the spawn location (this is to force it to move towards the center of the screen, where the player is most likely to be). However, I did find that the random spawning had players scrambling; perhaps because the player is assuming the enemy to target the fish’s current location, rather than a random one? Another issue with random destinations is when there’s no food, and the fish spread out, it’s unlikely for the enemy to hit any of them (leading to if the player does nothing, they’ll win). For future testing, see if these end destinations may work better: averaged location of the fish, averaged location of the food, where the player hand currently is (may have issues if both hands are on detected).  
 (9) The difficulty of the game can be increased / decreased by these parameters: time needed to stay alive, speed of enemy, coalescence radius around the food, speed of fish, food drop rate, food degradation rate.
 
-(GITIMAGES/fishdiagram.jpg)
+![justification diagram](GITIMAGES/fishdiagram.jpg)
 (Diagram of design justifications)  
 Other possible future implementations: interactable obstacles the fish must go through/around to escape the predator.
